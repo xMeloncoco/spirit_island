@@ -2,6 +2,51 @@
 
 This React application provides a comprehensive reference for all Spirit Island spirits across all expansions.
 
+## How to Run / Test the App
+
+### Prerequisites
+- Node.js (version 16 or higher recommended)
+- npm (comes with Node.js)
+
+### Installation & Running
+
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Start the development server**:
+   ```bash
+   npm run dev
+   ```
+
+3. **Open in browser**:
+   - The app will start at `http://localhost:5173` (or another port if 5173 is busy)
+   - Vite will display the URL in the terminal
+
+4. **Build for production** (optional):
+   ```bash
+   npm run build
+   ```
+
+### What You'll See
+
+The app will open with:
+- A filterable grid of all 37 Spirit Island spirits
+- Filters for complexity, expansion, elements, and tokens
+- Click any spirit card to see full details including:
+  - Special rules
+  - Innate powers
+  - Starting power cards
+  - Requirements to play
+
+### Quick Start (One Command)
+
+If you have npm installed, just run:
+```bash
+npm install && npm run dev
+```
+
 ## Refactoring Summary
 
 The original file `spirit-island-spirits (1).jsx` (71KB) has been refactored into three organized files:
