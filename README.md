@@ -8,7 +8,19 @@ This React application provides a comprehensive reference for all Spirit Island 
 - Node.js (version 16 or higher recommended)
 - npm (comes with Node.js)
 
-### Installation & Running
+### ⚡ Easiest Way (Windows)
+
+**Just double-click `start.bat`!**
+
+The batch file will:
+- ✅ Install dependencies automatically (if needed)
+- ✅ Start the development server in a new window
+- ✅ Wait for the server to be ready
+- ✅ Open your browser to http://localhost:5173
+
+No commands needed!
+
+### Installation & Running (Manual)
 
 1. **Install dependencies**:
    ```bash
