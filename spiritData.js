@@ -5,7 +5,7 @@ export const spiritData = {
       complexity: "Low",
       elements: ["Fire", "Air"],
       description: "A spirit of sudden, destructive power. Lightning destroys with fierce joy, excelling at eliminating Towns and Cities but struggling to maintain its pace.",
-      requirements: { products: ["Base Game"], tokens: [], notes: "Fully playable with base game only." },
+      requirements: { origin: "Base Game", tokens: [], selfContained: true, notes: "Fully playable with base game only." },
       specialRule: { name: "Swiftness of Lightning", text: "For each Air you have, you may use 1 Slow Power as if it were Fast." },
       innate: { name: "Thundering Destruction", text: "From a Sacred Site, Range 1. At 2 Fire + 1 Air: 1 Damage. At 3 Fire + 2 Air: Destroy 1 Town. At 4 Fire + 3 Air + 1 Water: Destroy 1 Town or City." },
       startingCards: [
@@ -21,7 +21,7 @@ export const spiritData = {
       complexity: "Low",
       elements: ["Sun", "Water"],
       description: "A spirit of the flowing river, bringing life and washing away obstacles. River controls the battlefield through pushing and movement.",
-      requirements: { products: ["Base Game"], tokens: [], notes: "Fully playable with base game only." },
+      requirements: { origin: "Base Game", tokens: [], selfContained: true, notes: "Fully playable with base game only." },
       specialRule: { name: "River's Domain", text: "When you have Presence in a Wetland, that Wetland is also a Sacred Site." },
       innate: { name: "Massive Flooding", text: "From a Sacred Site, Range 1. At 2 Sun + 2 Water: Push up to 2 Explorer/Town. At 3 Sun + 3 Water: Also +1 Damage per Dahan. At 3 Sun + 4 Water: Also 4 Damage." },
       startingCards: [
@@ -37,7 +37,7 @@ export const spiritData = {
       complexity: "Low",
       elements: ["Moon", "Fire", "Air"],
       description: "A spirit of darkness and fear, excellent at generating terror but struggling with direct damage early on.",
-      requirements: { products: ["Base Game"], tokens: [], notes: "Fully playable with base game only." },
+      requirements: { origin: "Base Game", tokens: [], selfContained: true, notes: "Fully playable with base game only." },
       specialRule: { name: "Shadows of the Burning Forest", text: "You may use Slow Powers as if they were Fast Powers by paying +1 Energy for each." },
       innate: { name: "Darkness Swallows the Unwary", text: "Range 0 from Presence. At 3 Moon + 2 Fire + 1 Air: 2 Fear. At 4 Moon + 3 Fire + 2 Air: Instead, 4 Fear and Destroy 1 Explorer." },
       startingCards: [
@@ -53,7 +53,7 @@ export const spiritData = {
       complexity: "Low",
       elements: ["Sun", "Earth", "Plant"],
       description: "A slow, defensive spirit that protects the land and Dahan. Very tough but limited in offense.",
-      requirements: { products: ["Base Game"], tokens: [], notes: "Fully playable with base game only." },
+      requirements: { origin: "Base Game", tokens: [], selfContained: true, notes: "Fully playable with base game only." },
       specialRule: { name: "Strength of the Land", text: "Presence has +4 Defend. Whenever Presence is Destroyed, Defend 4 in that land." },
       innate: { name: "Rituals of Destruction", text: "Sacred Site only. At 2 Sun + 2 Earth: 2 Damage. At 3 Sun + 3 Earth: +2 Damage. At 4 Sun + 4 Earth: +4 Damage and you may repeat this Power." },
       startingCards: [
@@ -69,7 +69,7 @@ export const spiritData = {
       complexity: "Moderate",
       elements: ["Sun", "Water", "Plant"],
       description: "A spirit of unstoppable growth, spreading presence across the island and choking out Invaders with vegetation.",
-      requirements: { products: ["Base Game"], tokens: [], notes: "Fully playable with base game only." },
+      requirements: { origin: "Base Game", tokens: [], selfContained: true, notes: "Fully playable with base game only." },
       specialRule: { name: "Choke the Land with Green", text: "Whenever Invaders would Build in a land where you have 2 or more Presence, instead they only Explore there." },
       innate: { name: "Creepers Tear Into Mortar", text: "Range 1 from Sacred Site. At 3 Plant: 1 Damage. Push up to 1 Town. At 4 Plant + 2 Water: You may repeat this Power. At 5 Plant + 3 Water: You may repeat this Power again." },
       startingCards: [
@@ -85,7 +85,7 @@ export const spiritData = {
       complexity: "Moderate",
       elements: ["Sun", "Fire", "Air"],
       description: "A spirit born of Lightning who speaks for the Dahan, directing them in battle. Extremely reliant on Dahan presence.",
-      requirements: { products: ["Base Game"], tokens: [], notes: "Fully playable with base game only." },
+      requirements: { origin: "Base Game", tokens: [], selfContained: true, notes: "Fully playable with base game only." },
       specialRule: { name: "Thunderspeaker", text: "Your Presence may only be added/moved to lands with Dahan. Whenever you would Gather Dahan, you may move your Presence along with those Dahan." },
       innate: { name: "Lead the Furious Assault", text: "At 2 Sun + 2 Fire: Each Dahan in one of your lands deals Damage equal to their Health. At 3 Sun + 2 Fire + 2 Air: +1 Damage per Dahan. At 4 Sun + 3 Fire + 3 Air: You may Repeat this in another land." },
       startingCards: [
@@ -101,7 +101,7 @@ export const spiritData = {
       complexity: "High",
       elements: ["Moon", "Air"],
       description: "A spirit of dreams that cannot directly damage Invaders, instead winning through pure Fear generation.",
-      requirements: { products: ["Base Game"], tokens: [], notes: "Fully playable with base game only." },
+      requirements: { origin: "Base Game", tokens: [], selfContained: true, notes: "Fully playable with base game only." },
       specialRule: { name: "To Dream a Thousand Deaths", text: "Your Powers never directly damage Invaders. When your Powers would Destroy Invaders, instead those Invaders generate Fear." },
       innate: { name: "Night Terrors", text: "Range 1 from Sacred Site. At 2 Moon: 2 Fear. At 3 Moon + 1 Air: Push 1 Explorer. At 5 Moon + 2 Air: +2 Fear." },
       startingCards: [
@@ -117,7 +117,7 @@ export const spiritData = {
       complexity: "High",
       elements: ["Moon", "Water", "Earth"],
       description: "A spirit of the devouring ocean that can only exist on Coastal lands but is devastatingly powerful there.",
-      requirements: { products: ["Base Game"], tokens: [], notes: "Fully playable with base game only." },
+      requirements: { origin: "Base Game", tokens: [], selfContained: true, notes: "Fully playable with base game only." },
       specialRule: { name: "Ocean in Play", text: "Oceans are in play. Ocean is Coastal. Ocean is adjacent to each Coastal land on the Island. Nothing may be added/moved to Ocean except via your Powers. Your Presence can only be in Ocean or Coastal lands." },
       innate: { name: "Pound Ships to Splinters", text: "At 2 Moon + 2 Water: 2 Damage to Ships. At 2 Moon + 3 Water + 1 Earth: Also, 2 Damage to Coastal lands." },
       startingCards: [
@@ -135,7 +135,7 @@ export const spiritData = {
       complexity: "Moderate",
       elements: ["Sun", "Fire", "Plant"],
       description: "An ancient guardian spirit that creates Wilds tokens to protect the land and punish trespassers.",
-      requirements: { products: ["Base Game", "Branch & Claw"], tokens: ["Wilds"], notes: "Requires Wilds tokens from Branch & Claw (or Jagged Earth)." },
+      requirements: { origin: "Branch & Claw", tokens: ["Wilds"], selfContained: true, notes: "Wilds tokens included in Branch & Claw." },
       specialRule: { name: "Spreading Wilds", text: "Each Spirit Phase, add 1 Wilds to 1 of your lands without any Wilds." },
       innate: { name: "Punish Those Who Trespass", text: "At 2 Sun + 2 Plant: 1 Fear. Destroy 1 Explorer in a land with Wilds. At 3 Sun + 3 Plant: +1 Fear. Destroy 1 Explorer/Town in a land with Wilds. At 4 Sun + 2 Fire + 4 Plant: +2 Fear. Destroy 2 Explorer/Town in lands with Wilds." },
       startingCards: [
@@ -151,7 +151,7 @@ export const spiritData = {
       complexity: "Moderate",
       elements: ["Moon", "Fire", "Plant", "Animal"],
       description: "A spirit of predatory beasts that commands animals to attack Invaders. Relies on Beasts tokens.",
-      requirements: { products: ["Base Game", "Branch & Claw"], tokens: ["Beasts"], notes: "Requires Beasts tokens from Branch & Claw (or Jagged Earth)." },
+      requirements: { origin: "Branch & Claw", tokens: ["Beasts"], selfContained: true, notes: "Beasts tokens included in Branch & Claw." },
       specialRule: { name: "Prey on the Hunters", text: "Beasts in your lands each deal 1 Damage during Ravage (to Invaders). 1 Beasts may be Destroyed to prevent 1 Damage to Dahan during Ravage." },
       innate: { name: "Ranging Hunt", text: "At 1 Moon + 2 Animal: Gather 1 Beasts. 1 Damage per Beasts. At 2 Moon + 1 Fire + 3 Animal: +1 Damage per Beasts. At 3 Moon + 2 Fire + 4 Animal: +1 Damage per Beasts." },
       startingCards: [
@@ -169,7 +169,7 @@ export const spiritData = {
       complexity: "High",
       elements: ["Fire", "Plant"],
       description: "A spirit of destructive fire that burns everything - Invaders, Dahan, and even the land itself. High damage but causes Blight.",
-      requirements: { products: ["Base Game", "Promo Pack 1 or Feather & Flame"], tokens: [], notes: "Fully playable with base game + promo spirit. No additional tokens required." },
+      requirements: { origin: "Promo Pack 1 / Feather & Flame", tokens: [], selfContained: true, notes: "No additional tokens or rules required beyond the base game." },
       specialRule: { name: "Blazing Presence", text: "Your Presence has 'Invaders in this land have -1 Health'. Each of your Presence in a Blighted land is also a Sacred Site." },
       innate: { name: "Flash-Fires", text: "At 2 Fire + 1 Plant: 1 Damage in target land. At 3 Fire + 2 Plant: +1 Damage. At 4 Fire + 3 Plant: +1 Damage. 1 Damage to Dahan. At 5 Fire + 4 Plant: +2 Damage." },
       startingCards: [
@@ -185,7 +185,7 @@ export const spiritData = {
       complexity: "High",
       elements: ["Moon", "Fire", "Water", "Earth", "Plant", "Animal"],
       description: "An ancient, powerful spirit slowly awakening. Starts incredibly weak but becomes terrifyingly strong over time.",
-      requirements: { products: ["Base Game", "Promo Pack 1 or Feather & Flame"], tokens: [], notes: "Fully playable with base game + promo spirit. Uses absorbed Presence mechanic." },
+      requirements: { origin: "Promo Pack 1 / Feather & Flame", tokens: [], selfContained: true, notes: "No additional tokens required. Uses unique absorbed Presence mechanic included with the spirit." },
       specialRule: { name: "Deep Slumber", text: "You may only have 1 Presence per board. Absorbed Presence cannot do things normally done by Presence (range, etc.)." },
       innate: { name: "Serpent Wakes in Power", text: "At 2 Fire + 2 Earth + 3 Moon: Serpent now ignores 'Deep Slumber'. At 3 Fire + 4 Earth + 4 Moon: Add 1 Presence to any land. At 4 Fire + 5 Earth + 5 Moon: Add 1 Presence to any land. At 5 Fire + 6 Earth + 6 Moon: Destroy all Invaders and Dahan in one land." },
       startingCards: [
@@ -203,7 +203,7 @@ export const spiritData = {
       complexity: "Moderate",
       elements: ["Sun", "Air", "Animal"],
       description: "A spirit of swarming creatures - birds, insects, and small animals that act as a collective intelligence.",
-      requirements: { products: ["Base Game", "Jagged Earth"], tokens: ["Beasts"], notes: "Requires Beasts tokens. Playable with Jagged Earth alone (includes all token types)." },
+      requirements: { origin: "Jagged Earth", tokens: ["Beasts"], selfContained: true, notes: "Beasts tokens included in Jagged Earth." },
       specialRule: { name: "Birdwatch", text: "Beasts in your lands contribute to your elements (1 Air, 1 Animal per Beasts, max 5 total). After setup, add 1 Beasts to each land with Presence." },
       innate: { name: "The Teeming Host Arrives", text: "At 2 Sun + 2 Air + 2 Animal: Push up to 1 Beasts. 1 Fear per Beasts. At 3 Sun + 3 Air + 3 Animal: +1 Fear per Beasts. At 4 Sun + 4 Air + 4 Animal: Push up to 1 more Beasts. +1 Damage per Beasts." },
       startingCards: [
@@ -219,7 +219,7 @@ export const spiritData = {
       complexity: "Moderate",
       elements: ["Sun", "Fire", "Air", "Earth"],
       description: "A spirit of volcanic power building to an explosive eruption. Accumulates power over time.",
-      requirements: { products: ["Base Game", "Jagged Earth"], tokens: ["Badlands"], notes: "Requires Badlands tokens (introduced in Jagged Earth)." },
+      requirements: { origin: "Jagged Earth", tokens: ["Badlands"], selfContained: true, jaggedEarthRuleset: "Thematic: works with any mountain setup. Enhanced with Smoking Volcano or Active Volcano island boards.", notes: "Badlands tokens included in Jagged Earth. Mountain-focused spirit that benefits from volcano island boards." },
       specialRule: { name: "Volcanic Presence", text: "Your presence in a Mountain has +1 Defend. During each Spirit Phase, you may place 1 Presence into a land with your Presence by paying 1 Energy." },
       innate: { name: "Lava Flows", text: "At 1 Fire + 1 Earth: Add 1 Badlands. At 2 Fire + 2 Air + 2 Earth: +1 Damage. At 3 Fire + 3 Air + 3 Earth: +1 Damage, +2 Fear. At 4 Fire + 4 Air + 4 Earth: +2 Damage." },
       startingCards: [
@@ -235,7 +235,7 @@ export const spiritData = {
       complexity: "High",
       elements: ["Moon", "Air", "Water"],
       description: "A spirit of deadly, choking mist that silently eliminates Invaders. Causes Disease through miasma.",
-      requirements: { products: ["Base Game", "Jagged Earth"], tokens: ["Disease"], notes: "Requires Disease tokens from Branch & Claw or Jagged Earth." },
+      requirements: { origin: "Jagged Earth", tokens: ["Disease"], selfContained: true, notes: "Disease tokens included in Jagged Earth." },
       specialRule: { name: "Mists Arise", text: "During setup, add 2 Disease to the land with your starting Presence. At the start of each Spirit Phase, add 1 Disease to a land where you have Presence and no Disease." },
       innate: { name: "The Fog Closes In", text: "At 1 Moon + 2 Air + 1 Water: In a land with Disease, 1 Damage. At 2 Moon + 3 Air + 2 Water: +1 Damage. At 4 Moon + 4 Air + 3 Water: +2 Damage." },
       startingCards: [
@@ -251,7 +251,7 @@ export const spiritData = {
       complexity: "High",
       elements: ["Moon", "Fire", "Earth", "Animal"],
       description: "A spirit of hatred and pestilence, spreading Disease as retribution for harm done to the land.",
-      requirements: { products: ["Base Game", "Jagged Earth"], tokens: ["Disease", "Badlands"], notes: "Requires Disease and Badlands tokens. Benefits from Blight on the island." },
+      requirements: { origin: "Jagged Earth", tokens: ["Disease", "Badlands"], selfContained: true, notes: "Disease and Badlands tokens included in Jagged Earth." },
       specialRule: { name: "Burning Retribution", text: "Whenever Blight would be added to one of your lands, you may add 1 Disease there (in addition to the Blight)." },
       innate: { name: "Fetid Breath Spreads Infection", text: "At 1 Moon + 2 Animal: Add 1 Disease. At 2 Moon + 1 Fire + 3 Animal: 1 Damage per Disease. At 4 Moon + 2 Fire + 4 Animal: Repeat." },
       startingCards: [
@@ -267,7 +267,7 @@ export const spiritData = {
       complexity: "Moderate",
       elements: ["Sun", "Earth"],
       description: "An obstinate spirit of bedrock that refuses to yield. Extremely defensive and prevents Blight addition.",
-      requirements: { products: ["Base Game", "Jagged Earth"], tokens: ["Badlands"], notes: "Uses Badlands tokens. Can prevent Blight by sacrificing Presence." },
+      requirements: { origin: "Jagged Earth", tokens: ["Badlands"], selfContained: true, notes: "Badlands tokens included in Jagged Earth." },
       specialRule: { name: "Immutable", text: "Your Presence cannot be moved or removed from the board by Invaders or Powers. (You may still Destroy it yourself.)" },
       innate: { name: "Hold the Island Fast with a Bulwark of Will", text: "At 1 Sun + 2 Earth: Defend 3 in all your lands. At 2 Sun + 3 Earth: Defend +2. At 3 Sun + 4 Earth: Also, 1 Damage in each of your lands. At 4 Sun + 5 Earth: You may pay 2 Energy to prevent Blight by destroying 1 Presence." },
       startingCards: [
@@ -283,7 +283,7 @@ export const spiritData = {
       complexity: "Moderate",
       elements: ["Moon", "Air", "Earth"],
       description: "A spirit of deep time and memory, preparing Element markers for future turns. Excellent support.",
-      requirements: { products: ["Base Game", "Jagged Earth"], tokens: ["Element Markers"], notes: "Requires Element Markers (introduced in Jagged Earth). Core to this spirit's mechanics." },
+      requirements: { origin: "Jagged Earth", tokens: ["Element Markers"], selfContained: true, notes: "Element Markers included in Jagged Earth. Core to this spirit's mechanics." },
       specialRule: { name: "Patterns Gauged from Epochs Past", text: "You start with 3 Prepare markers. When you would gain an Element Marker, instead prepare it. During Growth, gain prepared Element Markers." },
       innate: { name: "Insights into a Deeper Truth", text: "At 1 Air + 1 Earth: Target Spirit gains 2 Energy and may Reclaim 1 Power Card. At 2 Moon + 2 Air + 2 Earth: Also draws 1 Minor Power. At 3 Moon + 3 Air + 3 Earth: Also draws 1 Major Power without Forgetting." },
       startingCards: [
@@ -299,7 +299,7 @@ export const spiritData = {
       complexity: "Moderate",
       elements: ["Sun", "Moon", "Fire", "Air"],
       description: "A mischievous spirit that causes chaos, turning Invaders against each other with Strife.",
-      requirements: { products: ["Base Game", "Jagged Earth"], tokens: ["Strife", "Beasts"], notes: "Requires Strife tokens (and optionally Beasts). From Branch & Claw or Jagged Earth." },
+      requirements: { origin: "Jagged Earth", tokens: ["Strife", "Beasts"], selfContained: true, notes: "Strife and Beasts tokens included in Jagged Earth." },
       specialRule: { name: "Let's See What Happens", text: "Once each turn, when you target a land without Strife with a Power, you may add 1 Strife. If you do, resolve one of its Effects at random." },
       innate: { name: "Reckless Escalation", text: "At 2 Sun + 2 Moon + 2 Fire: 1 Fear. Add 1 Strife to a land with Strife. At 4 Sun + 4 Moon + 4 Fire: +2 Fear. Add 1 Strife elsewhere. At 6 Sun + 6 Moon + 6 Fire: In a land with 3+ Strife, 4 Damage. Add 1 Blight." },
       startingCards: [
@@ -315,7 +315,7 @@ export const spiritData = {
       complexity: "Moderate",
       elements: ["Moon", "Fire", "Plant"],
       description: "A spirit that draws Invaders into the wilderness where they become lost. Creates Badlands tokens.",
-      requirements: { products: ["Base Game", "Jagged Earth"], tokens: ["Badlands", "Beasts", "Disease", "Wilds"], notes: "Uses multiple token types. Badlands are core; other tokens boost its innate." },
+      requirements: { origin: "Jagged Earth", tokens: ["Badlands", "Beasts", "Disease", "Wilds"], selfContained: true, notes: "All token types included in Jagged Earth. Badlands are core; other tokens boost its innate." },
       specialRule: { name: "Forsaken Hunting Grounds", text: "When Invaders Explore into a land with 2 or more Badlands, skip adding Explorers there." },
       innate: { name: "Invite and Ensnare", text: "At 1 Moon + 1 Plant: Gather 1 Explorer into a land with Badlands. At 2 Moon + 1 Fire + 2 Plant: Gather 1 Explorer/Town. At 3 Moon + 2 Fire + 3 Plant: Repeat." },
       startingCards: [
@@ -331,7 +331,7 @@ export const spiritData = {
       complexity: "Very High",
       elements: ["Sun", "Moon", "Air"],
       description: "A spirit of broken time, manipulating the sequence of events. Extremely complex but powerful.",
-      requirements: { products: ["Base Game", "Jagged Earth"], tokens: ["Time (special)"], notes: "Uses unique Time currency mechanic. No standard tokens required, but complex rules." },
+      requirements: { origin: "Jagged Earth", tokens: ["Time (special)"], selfContained: true, notes: "Time currency mechanic included with the spirit. No standard tokens required." },
       specialRule: { name: "The Past Returns Again", text: "During Time Passes, you may discard up to 2 Power Cards from play to gain 2 Time and Forget those cards instead of discarding them." },
       innate: { name: "Splinter Time", text: "At 2 Sun + 2 Moon + 2 Air: You may Repeat 1 Power Card by paying 2 Time. At 4 Sun + 4 Moon + 4 Air: You may Repeat another Power Card by paying 2 Time." },
       startingCards: [
@@ -347,7 +347,7 @@ export const spiritData = {
       complexity: "Very High",
       elements: ["Moon", "Air", "Fire", "Water", "Earth", "Plant", "Animal"],
       description: "A formless spirit that can become whatever it needs to be. Chooses its nature at game start.",
-      requirements: { products: ["Base Game", "Jagged Earth"], tokens: ["Element Markers"], notes: "Requires Element Markers. Highly customizable depending on Form chosen." },
+      requirements: { origin: "Jagged Earth", tokens: ["Element Markers"], selfContained: true, notes: "Element Markers included in Jagged Earth. Highly customizable depending on Form chosen." },
       specialRule: { name: "A Star Amongst the Spirits", text: "During Setup, choose a Form: Light (gains Sun), Dark (gains Moon), or any mix you want." },
       innate: { name: "Wandering Light", text: "Varies based on chosen Form and elements in play." },
       startingCards: [
@@ -365,7 +365,7 @@ export const spiritData = {
       complexity: "High",
       elements: ["Sun", "Water", "Air", "Earth"],
       description: "A spirit of relentless rain, flooding the land and drowning Invaders. Creates and manipulates Wetlands.",
-      requirements: { products: ["Base Game", "Promo Pack 2 or Feather & Flame"], tokens: ["Wilds"], notes: "Uses Wilds tokens. Requires Branch & Claw, Jagged Earth, or Feather & Flame for tokens." },
+      requirements: { origin: "Promo Pack 2 / Feather & Flame", tokens: ["Wilds"], selfContained: false, tokenSources: ["Branch & Claw", "Jagged Earth", "Feather & Flame", "Horizons of Spirit Island"], notes: "Wilds tokens NOT included with the promo spirit. Requires a separate source for Wilds tokens." },
       specialRule: { name: "Relentless Downpour", text: "After Growth, choose a land with your Presence. It becomes a Wetland until the end of this turn." },
       innate: { name: "Rain and Mud Suppress Conflict", text: "At 2 Sun + 2 Water + 1 Air: Defend 2 per Presence. At 3 Sun + 3 Water + 2 Air + 1 Earth: Invaders skip Ravage. At 4 Sun + 4 Water + 3 Air + 2 Earth: Skip all Invader Actions." },
       startingCards: [
@@ -381,7 +381,7 @@ export const spiritData = {
       complexity: "Very High",
       elements: ["Moon", "Air", "Water"],
       description: "A spirit of hidden ways that moves things around the island through secret paths. Maximum mobility.",
-      requirements: { products: ["Base Game", "Promo Pack 2 or Feather & Flame"], tokens: [], notes: "No special tokens required. Uses unique adjacency manipulation rules." },
+      requirements: { origin: "Promo Pack 2 / Feather & Flame", tokens: [], selfContained: true, notes: "No special tokens required. Uses unique adjacency manipulation rules included with the spirit." },
       specialRule: { name: "Paths Wend Through Everywhere", text: "Once per turn, when you use a Power, you may treat any 2 lands as adjacent for that Power." },
       innate: { name: "Lay Paths They Cannot Help But Walk", text: "At 2 Moon + 2 Air: Gather up to 2 Explorers. At 3 Moon + 3 Air + 1 Water: Gather up to 3 Explorers/Towns. At 4 Moon + 4 Air + 2 Water: Gather up to 5 pieces of any type." },
       startingCards: [
@@ -399,7 +399,7 @@ export const spiritData = {
       complexity: "Low",
       elements: ["Moon", "Fire", "Earth", "Animal"],
       description: "A spirit of predatory creatures that lurk underground, emerging to devour Invaders.",
-      requirements: { products: ["Horizons of Spirit Island"], tokens: ["Beasts"], notes: "Standalone game. Beasts tokens included in Horizons box. Compatible with full Spirit Island." },
+      requirements: { origin: "Horizons of Spirit Island", tokens: ["Beasts"], selfContained: true, notes: "Beasts tokens included in Horizons box. Standalone game, also compatible with full Spirit Island." },
       specialRule: { name: "Death from Below", text: "Your Presence in a land with Beasts has +1 Defend. After setup, add 1 Beasts to each of your lands." },
       innate: { name: "Frenzy of Gnashing Teeth", text: "At 1 Moon + 1 Fire + 1 Animal: 1 Damage per Beasts. At 2 Moon + 2 Fire + 2 Animal: +1 Fear per Beasts. At 3 Moon + 3 Fire + 3 Animal: +1 Damage per Beasts." },
       startingCards: [
@@ -415,7 +415,7 @@ export const spiritData = {
       complexity: "Low",
       elements: ["Moon", "Air", "Plant"],
       description: "A watchful spirit that generates Fear and prevents Invader actions through vigilance.",
-      requirements: { products: ["Horizons of Spirit Island"], tokens: ["Wilds"], notes: "Standalone game. Wilds tokens included in Horizons box. Compatible with full Spirit Island." },
+      requirements: { origin: "Horizons of Spirit Island", tokens: ["Wilds"], selfContained: true, notes: "Wilds tokens included in Horizons box. Standalone game, also compatible with full Spirit Island." },
       specialRule: { name: "Watching from the Wilds", text: "During setup, add 1 Wilds to your starting land." },
       innate: { name: "All See Their Secrets", text: "At 2 Moon + 2 Plant: 2 Fear. At 3 Moon + 1 Air + 3 Plant: +1 Fear. At 4 Moon + 2 Air + 4 Plant: In a land with Wilds, Invaders skip one Action." },
       startingCards: [
@@ -431,7 +431,7 @@ export const spiritData = {
       complexity: "Low",
       elements: ["Moon", "Water", "Earth"],
       description: "A spirit of treacherous swamps that traps and drowns Invaders who venture too deep.",
-      requirements: { products: ["Horizons of Spirit Island"], tokens: [], notes: "Standalone game. No special tokens required. Compatible with full Spirit Island." },
+      requirements: { origin: "Horizons of Spirit Island", tokens: [], selfContained: true, notes: "No special tokens required. Standalone game, also compatible with full Spirit Island." },
       specialRule: { name: "Fathomless Depths", text: "Your Presence in Wetlands has +2 Defend." },
       innate: { name: "Sucking Mire Awaits Them", text: "At 1 Water + 2 Earth: Defend 2. At 2 Water + 3 Earth: +2 Defend. 1 Fear. At 3 Water + 4 Earth: +2 Defend. 2 Damage." },
       startingCards: [
@@ -447,7 +447,7 @@ export const spiritData = {
       complexity: "Low",
       elements: ["Sun", "Fire", "Air", "Earth"],
       description: "A spirit of scorching heat that bakes the land and drives away Invaders with unbearable warmth.",
-      requirements: { products: ["Horizons of Spirit Island"], tokens: ["Badlands", "Beasts"], notes: "Standalone game. Badlands and Beasts tokens included in Horizons box." },
+      requirements: { origin: "Horizons of Spirit Island", tokens: ["Badlands", "Beasts"], selfContained: true, notes: "Badlands and Beasts tokens included in Horizons box. Standalone game, also compatible with full Spirit Island." },
       specialRule: { name: "Scorching Heat", text: "Your Presence in Sands or Mountains has +1 Damage during Ravage." },
       innate: { name: "Deadening Warmth", text: "At 1 Sun + 1 Fire + 1 Air: 1 Damage. At 2 Sun + 2 Fire + 2 Air: Push up to 2 Explorer. At 3 Sun + 3 Fire + 3 Air: +1 Damage." },
       startingCards: [
@@ -463,7 +463,7 @@ export const spiritData = {
       complexity: "Low",
       elements: ["Sun", "Fire", "Air"],
       description: "A spirit of brilliant, powerful winds that scatters everything in its path.",
-      requirements: { products: ["Horizons of Spirit Island"], tokens: [], notes: "Standalone game. No special tokens required. Compatible with full Spirit Island." },
+      requirements: { origin: "Horizons of Spirit Island", tokens: [], selfContained: true, notes: "No special tokens required. Standalone game, also compatible with full Spirit Island." },
       specialRule: { name: "Violent Gusts", text: "Whenever you Push, you may Push 1 additional piece of any type." },
       innate: { name: "Gale-Force Winds", text: "At 2 Sun + 1 Fire + 2 Air: Push up to 3 Explorer/Town/Dahan. At 3 Sun + 2 Fire + 3 Air: You may Push up to 1 City. At 4 Sun + 3 Fire + 4 Air: 1 Damage to each Invader you Pushed." },
       startingCards: [
@@ -481,7 +481,7 @@ export const spiritData = {
       complexity: "Moderate",
       elements: ["Sun", "Fire", "Earth", "Animal"],
       description: "A massive creature spirit that physically walks the island as an Incarna token.",
-      requirements: { products: ["Base Game", "Jagged Earth", "Nature Incarnate"], tokens: ["Incarna"], notes: "Requires Incarna tokens (new in Nature Incarnate). Needs Base Game + Jagged Earth + Nature Incarnate." },
+      requirements: { origin: "Nature Incarnate", tokens: ["Incarna"], selfContained: true, notes: "Incarna tokens included in Nature Incarnate. No additional expansion rules required." },
       specialRule: { name: "Behemoth Walks", text: "You have an Incarna (starts in your starting land). Your Incarna is Presence you can move during Growth." },
       innate: { name: "Trample and Rampage", text: "At 2 Sun + 2 Fire + 2 Earth: Your Incarna's land: 2 Damage. At 3 Sun + 3 Fire + 3 Earth: +2 Damage. At 4 Sun + 4 Fire + 4 Earth: +2 Damage. Destroy 1 Town." },
       startingCards: [
@@ -497,7 +497,7 @@ export const spiritData = {
       complexity: "Moderate",
       elements: ["Sun", "Fire", "Earth", "Plant"],
       description: "A spirit of protective home-fires that defends the Dahan and their settlements.",
-      requirements: { products: ["Base Game", "Jagged Earth", "Nature Incarnate"], tokens: [], notes: "Requires Base Game + Jagged Earth + Nature Incarnate. No special tokens beyond standard." },
+      requirements: { origin: "Nature Incarnate", tokens: [], selfContained: true, notes: "Fully self-contained. No additional tokens or expansion rules required beyond the base game." },
       specialRule: { name: "Dahan Guard the Hearth", text: "Dahan in your lands Defend 1 per Dahan there. (This stacks with other Defend.)" },
       innate: { name: "Flames Flicker in Warning", text: "At 2 Sun + 2 Fire: 1 Fear. Defend 2. At 3 Sun + 3 Fire + 1 Plant: +2 Defend. At 4 Sun + 4 Fire + 2 Plant: +1 Fear. Push up to 2 Explorer." },
       startingCards: [
@@ -513,7 +513,7 @@ export const spiritData = {
       complexity: "Moderate",
       elements: ["Sun", "Water", "Earth", "Plant"],
       description: "A spirit of ancient jungle trees with deep roots and towering canopy.",
-      requirements: { products: ["Base Game", "Jagged Earth", "Nature Incarnate"], tokens: ["Wilds"], notes: "Requires Wilds tokens. Needs Base Game + Jagged Earth + Nature Incarnate." },
+      requirements: { origin: "Nature Incarnate", tokens: ["Wilds"], selfContained: false, tokenSources: ["Branch & Claw", "Jagged Earth", "Feather & Flame", "Horizons of Spirit Island"], notes: "Wilds tokens NOT included in Nature Incarnate. Requires a separate source for Wilds tokens." },
       specialRule: { name: "Towering Growth", text: "Whenever you add Presence, you may add it to any land adjacent to one of your lands (instead of requiring range from Presence)." },
       innate: { name: "Entwined Growth", text: "At 2 Sun + 2 Earth + 2 Plant: Add 1 Wilds. Defend 4. At 3 Sun + 3 Earth + 3 Plant: +2 Defend. Push up to 2 Town. At 4 Sun + 4 Earth + 4 Plant: +2 Defend. 2 Damage." },
       startingCards: [
@@ -529,7 +529,7 @@ export const spiritData = {
       complexity: "High",
       elements: ["Moon", "Air"],
       description: "A spirit of creeping dread and whispered terrors that makes Invaders afraid of the dark.",
-      requirements: { products: ["Base Game", "Jagged Earth", "Nature Incarnate"], tokens: ["Incarna"], notes: "Uses Incarna token (shadowy figure). Requires Base Game + Jagged Earth + Nature Incarnate." },
+      requirements: { origin: "Nature Incarnate", tokens: ["Incarna"], selfContained: true, notes: "Incarna tokens included in Nature Incarnate. No additional expansion rules required." },
       specialRule: { name: "Creeping Dread", text: "Whenever you generate Fear in a land, you may Push 1 Explorer from that land." },
       innate: { name: "Nightmares Seep Through", text: "At 2 Moon + 1 Air: 2 Fear. At 3 Moon + 2 Air: +1 Fear. At 5 Moon + 3 Air: +1 Fear. Invaders do -1 Damage during Ravage." },
       startingCards: [
@@ -545,7 +545,7 @@ export const spiritData = {
       complexity: "High",
       elements: ["Sun", "Fire", "Air"],
       description: "A spirit of the scorching, unblinking sun that creates Badlands and punishes exposure.",
-      requirements: { products: ["Base Game", "Jagged Earth", "Nature Incarnate"], tokens: ["Badlands"], notes: "Requires Badlands tokens. Needs Base Game + Jagged Earth + Nature Incarnate. Harms Dahan too!" },
+      requirements: { origin: "Nature Incarnate", tokens: ["Badlands"], selfContained: false, tokenSources: ["Jagged Earth", "Horizons of Spirit Island"], notes: "Badlands tokens NOT included in Nature Incarnate. Requires Jagged Earth or Horizons for Badlands tokens. Harms Dahan too!" },
       specialRule: { name: "Domain of the Sun's Reach", text: "Your Sacred Sites are in lands with 2+ Badlands (in addition to lands with 2+ Presence)." },
       innate: { name: "Searing Glare", text: "At 2 Sun + 2 Fire: 1 Damage per Badlands. At 3 Sun + 3 Fire + 1 Air: Add 1 Badlands. +1 Damage per Badlands. At 4 Sun + 4 Fire + 2 Air: +1 Damage per Badlands." },
       startingCards: [
@@ -561,7 +561,7 @@ export const spiritData = {
       complexity: "High",
       elements: ["Moon", "Air", "Water"],
       description: "A spirit of maddening sounds that spreads confusion and delirium among Invaders.",
-      requirements: { products: ["Base Game", "Jagged Earth", "Nature Incarnate"], tokens: ["Strife"], notes: "Requires Strife tokens. Needs Base Game + Jagged Earth + Nature Incarnate." },
+      requirements: { origin: "Nature Incarnate", tokens: ["Strife"], selfContained: false, tokenSources: ["Branch & Claw", "Jagged Earth"], notes: "Strife tokens NOT included in Nature Incarnate. Requires Branch & Claw or Jagged Earth for Strife tokens." },
       specialRule: { name: "Maddening Wail", text: "Once per turn, before or after a Power adds Strife, you may add 1 Strife to that land." },
       innate: { name: "Sounds No One Else Can Hear", text: "At 2 Moon + 2 Air: 1 Fear. Add 1 Strife. At 3 Moon + 3 Air + 1 Water: +1 Fear. +1 Strife. At 4 Moon + 4 Air + 2 Water: +1 Fear. Invaders with Strife damage other Invaders." },
       startingCards: [
@@ -577,7 +577,7 @@ export const spiritData = {
       complexity: "High",
       elements: ["Moon", "Water", "Earth", "Animal"],
       description: "A spirit of polluted, corrupted waters that uses its own suffering as a weapon.",
-      requirements: { products: ["Base Game", "Jagged Earth", "Nature Incarnate"], tokens: ["Disease"], notes: "Requires Disease tokens. Starts with Blight in its land. Needs Base Game + Jagged Earth + Nature Incarnate." },
+      requirements: { origin: "Nature Incarnate", tokens: ["Disease"], selfContained: false, tokenSources: ["Branch & Claw", "Jagged Earth"], notes: "Disease tokens NOT included in Nature Incarnate. Requires Branch & Claw or Jagged Earth for Disease tokens. Starts with Blight in its land." },
       specialRule: { name: "Corruption Spreads", text: "After setup, add 1 Blight to your starting land. Your Presence in Blighted Wetlands is also a Sacred Site." },
       innate: { name: "Tainted Runoff", text: "At 1 Moon + 2 Water + 1 Earth: In a Blighted land, 2 Damage. At 2 Moon + 3 Water + 2 Earth: +2 Damage. At 3 Moon + 4 Water + 3 Earth: Repeat in a different Blighted land." },
       startingCards: [
@@ -593,7 +593,7 @@ export const spiritData = {
       complexity: "Very High",
       elements: ["Moon", "Fire", "Earth"],
       description: "A spirit of seismic power that builds up energy over time for devastating earthquakes.",
-      requirements: { products: ["Base Game", "Jagged Earth", "Nature Incarnate"], tokens: ["Quake", "Badlands", "Incarna"], notes: "Uses unique Quake tokens and Impending mechanic. Starts with 6 unique powers! Requires Base Game + Jagged Earth + Nature Incarnate." },
+      requirements: { origin: "Nature Incarnate", tokens: ["Quake", "Badlands", "Incarna"], selfContained: false, tokenSources: ["Jagged Earth", "Horizons of Spirit Island"], tokenNotes: "Quake and Incarna tokens included in Nature Incarnate. Badlands tokens require Jagged Earth or Horizons.", notes: "Quake tokens and Impending mechanic are unique to this spirit (included in NI). Badlands tokens NOT included; requires Jagged Earth or Horizons. Starts with 6 unique powers." },
       specialRule: { name: "Foundations Shift and Strain", text: "You have an Impending slot. Cards there take effect one turn later." },
       innate: { name: "The Earth Moves and Shakes", text: "At 2 Moon + 2 Fire + 2 Earth: 2 Damage. Destroy 1 Town. At 3 Moon + 3 Fire + 3 Earth: +2 Damage. At 4 Moon + 4 Fire + 4 Earth: Destroy all Towns." },
       startingCards: [

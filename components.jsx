@@ -65,19 +65,63 @@ export const PowerCard = ({ card }) => (
 
 export const RequirementsSection = ({ requirements }) => (
   <div className="bg-gradient-to-r from-teal-900/30 to-cyan-900/30 rounded-xl p-4 border border-teal-700/50">
-    <h3 className="text-lg font-bold text-teal-300 mb-3">📦 Requirements to Play</h3>
-    <div className="space-y-2">
+    <h3 className="text-lg font-bold text-teal-300 mb-3">Requirements</h3>
+    <div className="space-y-3">
+      {/* Origin — where the spirit comes from */}
       <div>
-        <span className="text-stone-400 text-sm">Products needed: </span>
-        <span className="text-teal-200 font-medium">{requirements.products.join(" + ")}</span>
+        <span className="text-stone-500 text-xs uppercase tracking-wider font-bold">Comes from</span>
+        <div className="text-teal-200 font-medium mt-0.5">{requirements.origin}</div>
       </div>
+
+      {/* Gameplay requirements — what you need on the table */}
+      <div>
+        <span className="text-stone-500 text-xs uppercase tracking-wider font-bold">Requires components from</span>
+        {requirements.selfContained ? (
+          <div className="mt-0.5">
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-900/40 border border-emerald-700/50 text-emerald-300 text-sm font-medium">
+              Self-contained
+            </span>
+            <span className="text-stone-400 text-sm ml-2">Playable with just the base game + {requirements.origin}</span>
+          </div>
+        ) : (
+          <div className="mt-0.5">
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-amber-900/40 border border-amber-700/50 text-amber-300 text-sm font-medium">
+              Extra components needed
+            </span>
+            {requirements.tokenSources && requirements.tokenSources.length > 0 && (
+              <div className="text-stone-300 text-sm mt-1">
+                <span className="text-stone-400">Token sources: </span>
+                {requirements.tokenSources.join(" / ")}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Tokens */}
       {requirements.tokens.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-stone-400 text-sm">Tokens required: </span>
-          {requirements.tokens.map((token, i) => <TokenBadge key={i} token={token} />)}
+        <div>
+          <span className="text-stone-500 text-xs uppercase tracking-wider font-bold">Tokens used</span>
+          <div className="flex flex-wrap items-center gap-2 mt-1">
+            {requirements.tokens.map((token, i) => <TokenBadge key={i} token={token} />)}
+          </div>
         </div>
       )}
-      <p className="text-stone-400 text-sm italic mt-2">{requirements.notes}</p>
+
+      {/* Jagged Earth ruleset note */}
+      {requirements.jaggedEarthRuleset && (
+        <div>
+          <span className="text-stone-500 text-xs uppercase tracking-wider font-bold">Jagged Earth island boards</span>
+          <div className="text-stone-300 text-sm mt-0.5">{requirements.jaggedEarthRuleset}</div>
+        </div>
+      )}
+
+      {/* Token notes for spirits with mixed token origins */}
+      {requirements.tokenNotes && (
+        <p className="text-stone-400 text-sm italic">{requirements.tokenNotes}</p>
+      )}
+
+      <p className="text-stone-400 text-sm italic border-t border-stone-700/50 pt-2 mt-2">{requirements.notes}</p>
     </div>
   </div>
 );
