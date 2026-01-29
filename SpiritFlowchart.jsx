@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   flowchartSpirits,
   complexityOptions,
@@ -7,6 +7,35 @@ import {
   mechanicOptions,
   elementCodes
 } from './flowchartData';
+import { spiritData } from './spiritData';
+import { SpiritDetail } from './components';
+
+// === LocalStorage helpers ===
+
+const STORAGE_KEY = 'spiritFlowchartLastResult';
+
+function saveResult(data) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (e) { /* ignore */ }
+}
+
+function loadResult() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+
+// === Find reference spirit by name ===
+
+function findReferenceSpirit(name) {
+  for (const spirits of Object.values(spiritData)) {
+    const match = spirits.find(s => s.name === name);
+    if (match) return match;
+  }
+  return null;
+}
 
 // === Scoring ===
 
@@ -17,9 +46,7 @@ function scoreSpirits(filters, rankedPlaystyles) {
   return pool.map(spirit => {
     let score = 0;
 
-    // Playstyle scoring
     if (rankedPlaystyles) {
-      // Phase 2: ranked scoring
       rankedPlaystyles.forEach((code, idx) => {
         const weight = idx === 0 ? 5 : idx === 1 ? 3 : idx === 2 ? 1 : 0;
         if (spirit.playstyles.includes(code)) {
@@ -27,13 +54,11 @@ function scoreSpirits(filters, rankedPlaystyles) {
         }
       });
     } else if (filters.playstyle) {
-      // Phase 1: single playstyle selection — +5 per match
       if (spirit.playstyles.includes(filters.playstyle)) {
         score += 5;
       }
     }
 
-    // Speed scoring
     if (speed) {
       if (spirit.speed === speed) {
         score += 3;
@@ -42,7 +67,6 @@ function scoreSpirits(filters, rankedPlaystyles) {
       }
     }
 
-    // Mechanic scoring
     if (mechanics && mechanics.length > 0) {
       mechanics.forEach(m => {
         if (spirit.mechanics.includes(m)) score += 3;
@@ -177,7 +201,6 @@ function PlaystyleRankStep({ ranked, onRankedChange, onToggleMode }) {
         Switch to simple selection
       </button>
 
-      {/* Current ranking */}
       <div className="max-w-lg mx-auto mb-6">
         {ranked.length > 0 && (
           <div className="space-y-2 mb-4">
@@ -198,7 +221,6 @@ function PlaystyleRankStep({ ranked, onRankedChange, onToggleMode }) {
           </div>
         )}
 
-        {/* Available to pick */}
         {available.length > 0 && (
           <div className="space-y-2">
             <p className="text-stone-500 text-sm">Click to add (rank {ranked.length + 1}):</p>
@@ -313,14 +335,17 @@ function ElementBadge({ code }) {
   );
 }
 
-function SpiritResultCard({ spirit, size = "large" }) {
+function SpiritResultCard({ spirit, size = "large", onClick }) {
   const playstyleLabels = spirit.playstyles.map(c => playstyleOptions.find(p => p.code === c)?.label).join(', ');
   const mechLabels = spirit.mechanics.map(c => mechanicOptions.find(m => m.code === c)?.label).join(', ');
   const speedLabel = speedOptions.find(s => s.code === spirit.speed)?.label;
 
   if (size === "small") {
     return (
-      <div className="p-3 rounded-lg bg-stone-800/60 border border-stone-700">
+      <div
+        onClick={onClick}
+        className="p-3 rounded-lg bg-stone-800/60 border border-stone-700 cursor-pointer hover:border-amber-500 transition-all"
+      >
         <div className="flex items-start justify-between">
           <div>
             <h4 className="font-bold text-stone-200 text-sm">{spirit.name}</h4>
@@ -333,11 +358,14 @@ function SpiritResultCard({ spirit, size = "large" }) {
   }
 
   return (
-    <div className={`rounded-xl border p-5 ${
-      size === "large"
-        ? 'bg-gradient-to-br from-amber-900/20 to-stone-900 border-amber-600'
-        : 'bg-stone-800/60 border-stone-600'
-    }`}>
+    <div
+      onClick={onClick}
+      className={`rounded-xl border p-5 cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-900/20 ${
+        size === "large"
+          ? 'bg-gradient-to-br from-amber-900/20 to-stone-900 border-amber-600 hover:border-amber-400'
+          : 'bg-stone-800/60 border-stone-600 hover:border-amber-500'
+      }`}
+    >
       <div className="flex items-start justify-between mb-2">
         <h3 className={`font-bold ${size === "large" ? 'text-xl text-amber-200' : 'text-base text-stone-200'}`}
             style={{ fontFamily: 'Cinzel, serif' }}>
@@ -371,6 +399,55 @@ function SpiritResultCard({ spirit, size = "large" }) {
       {size === "large" && (
         <div className="mt-2 text-xs text-stone-500">Expansion: {spirit.expansion}</div>
       )}
+
+      <div className="mt-3 text-xs text-amber-400 opacity-70">Click for full details</div>
+    </div>
+  );
+}
+
+// Spirit detail overlay for flowchart results — wraps the reference SpiritDetail or shows a simple view
+function FlowchartSpiritDetail({ spirit, onClose }) {
+  const refSpirit = findReferenceSpirit(spirit.name);
+
+  if (refSpirit) {
+    return <SpiritDetail spirit={refSpirit} onClose={onClose} />;
+  }
+
+  // Fallback for spirits not in reference data
+  const playstyleLabels = spirit.playstyles.map(c => playstyleOptions.find(p => p.code === c)?.label).join(', ');
+  const mechLabels = spirit.mechanics.map(c => mechanicOptions.find(m => m.code === c)?.label).join(', ');
+  const speedLabel = speedOptions.find(s => s.code === spirit.speed)?.label;
+
+  return (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto">
+      <div className="min-h-screen py-8 px-4">
+        <div className="max-w-2xl mx-auto bg-gradient-to-b from-stone-900 to-stone-950 rounded-2xl border border-stone-700 shadow-2xl">
+          <div className="relative p-6 border-b border-stone-700 bg-gradient-to-r from-amber-900/30 to-orange-900/30 rounded-t-2xl">
+            <button onClick={onClose} className="absolute top-4 right-4 text-stone-400 hover:text-white text-3xl leading-none">&times;</button>
+            <h2 className="text-3xl font-black text-amber-100 mb-2" style={{ fontFamily: 'Cinzel, serif' }}>{spirit.name}</h2>
+            <div className="flex gap-1 mb-3">
+              {spirit.elements.map((el, i) => <ElementBadge key={i} code={el} />)}
+            </div>
+            <p className="text-stone-300 italic">{spirit.description}</p>
+          </div>
+          <div className="p-6 space-y-4">
+            <div className="bg-stone-800/50 rounded-xl p-4 border border-stone-700">
+              <h3 className="text-lg font-bold text-amber-400 mb-2">Playstyle</h3>
+              <p className="text-stone-300">{playstyleLabels}</p>
+            </div>
+            <div className="bg-stone-800/50 rounded-xl p-4 border border-stone-700">
+              <h3 className="text-lg font-bold text-amber-400 mb-2">Speed</h3>
+              <p className="text-stone-300">{speedLabel}</p>
+            </div>
+            <div className="bg-stone-800/50 rounded-xl p-4 border border-stone-700">
+              <h3 className="text-lg font-bold text-amber-400 mb-2">Mechanics</h3>
+              <p className="text-stone-300">{mechLabels}</p>
+            </div>
+            <div className="text-sm text-stone-500">Expansion: {spirit.expansion}</div>
+            <div className="text-sm text-stone-500">Match Score: {spirit.score} pts</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -394,6 +471,17 @@ function ResultsStep({ filters, rankedPlaystyles, useRanking, onRestart }) {
 
   const [copied, setCopied] = useState(false);
   const [showOthers, setShowOthers] = useState(false);
+  const [detailSpirit, setDetailSpirit] = useState(null);
+
+  // Save results to localStorage whenever they compute
+  useEffect(() => {
+    saveResult({
+      filters,
+      rankedPlaystyles,
+      useRanking,
+      timestamp: Date.now()
+    });
+  }, [filters, rankedPlaystyles, useRanking]);
 
   const copyCode = () => {
     if (prefCode) {
@@ -410,7 +498,6 @@ function ResultsStep({ filters, rankedPlaystyles, useRanking, onRestart }) {
         Your Spirit Matches
       </h2>
 
-      {/* Preference Code (Phase 2) */}
       {prefCode && (
         <div className="max-w-lg mx-auto mb-8 p-4 rounded-xl bg-teal-900/30 border border-teal-700">
           <div className="text-sm text-teal-400 mb-1">Your Preference Code</div>
@@ -426,27 +513,28 @@ function ResultsStep({ filters, rankedPlaystyles, useRanking, onRestart }) {
         </div>
       )}
 
-      {/* Best Matches */}
       {best.length > 0 && (
         <div className="mb-8">
           <h3 className="text-lg font-bold text-emerald-400 mb-3">Best Matches</h3>
           <div className="grid md:grid-cols-2 gap-4">
-            {best.map(s => <SpiritResultCard key={s.id} spirit={s} size="large" />)}
+            {best.map(s => (
+              <SpiritResultCard key={s.id} spirit={s} size="large" onClick={() => setDetailSpirit(s)} />
+            ))}
           </div>
         </div>
       )}
 
-      {/* Runner-Ups */}
       {runners.length > 0 && (
         <div className="mb-8">
           <h3 className="text-lg font-bold text-amber-400 mb-3">Close Runner-Ups</h3>
           <div className="grid md:grid-cols-2 gap-4">
-            {runners.map(s => <SpiritResultCard key={s.id} spirit={s} size="medium" />)}
+            {runners.map(s => (
+              <SpiritResultCard key={s.id} spirit={s} size="medium" onClick={() => setDetailSpirit(s)} />
+            ))}
           </div>
         </div>
       )}
 
-      {/* Other Options */}
       {others.length > 0 && (
         <div className="mb-8">
           <button
@@ -457,7 +545,9 @@ function ResultsStep({ filters, rankedPlaystyles, useRanking, onRestart }) {
           </button>
           {showOthers && (
             <div className="grid gap-2 mt-3">
-              {others.map(s => <SpiritResultCard key={s.id} spirit={s} size="small" />)}
+              {others.map(s => (
+                <SpiritResultCard key={s.id} spirit={s} size="small" onClick={() => setDetailSpirit(s)} />
+              ))}
             </div>
           )}
         </div>
@@ -471,13 +561,101 @@ function ResultsStep({ filters, rankedPlaystyles, useRanking, onRestart }) {
           Start Over
         </button>
       </div>
+
+      {detailSpirit && (
+        <FlowchartSpiritDetail spirit={detailSpirit} onClose={() => setDetailSpirit(null)} />
+      )}
     </div>
   );
+}
+
+// === Welcome / Resume Screen ===
+
+function WelcomeScreen({ savedResult, onResume, onNew }) {
+  const complexityLabel = complexityOptions.find(c => c.code === savedResult.filters.complexity)?.label || savedResult.filters.complexity;
+  const speedLabel = speedOptions.find(s => s.code === savedResult.filters.speed)?.label || savedResult.filters.speed;
+  const mechLabels = savedResult.filters.mechanics.map(c => mechanicOptions.find(m => m.code === c)?.label || c).join(', ');
+
+  let playstyleDesc;
+  if (savedResult.useRanking && savedResult.rankedPlaystyles.length > 0) {
+    const labels = savedResult.rankedPlaystyles.map(c => playstyleOptions.find(p => p.code === c)?.label || c);
+    playstyleDesc = labels.join(' > ');
+  } else if (savedResult.filters.playstyle) {
+    playstyleDesc = playstyleOptions.find(p => p.code === savedResult.filters.playstyle)?.label || savedResult.filters.playstyle;
+  } else {
+    playstyleDesc = 'None';
+  }
+
+  const date = new Date(savedResult.timestamp);
+  const timeAgo = formatTimeAgo(date);
+
+  return (
+    <div className="max-w-lg mx-auto px-4 py-12 text-center">
+      <h2 className="text-3xl font-bold text-amber-200 mb-3" style={{ fontFamily: 'Cinzel, serif' }}>
+        Find Your Spirit
+      </h2>
+      <p className="text-stone-400 mb-8">You have previous results from {timeAgo}.</p>
+
+      <div className="bg-stone-800/60 border border-stone-700 rounded-xl p-5 mb-8 text-left">
+        <h3 className="text-sm font-bold text-stone-400 uppercase tracking-wider mb-3">Previous Preferences</h3>
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between">
+            <span className="text-stone-500">Complexity</span>
+            <span className="text-amber-200 font-medium">{complexityLabel}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-stone-500">Playstyle</span>
+            <span className="text-amber-200 font-medium text-right max-w-[60%]">{playstyleDesc}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-stone-500">Speed</span>
+            <span className="text-amber-200 font-medium">{speedLabel}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-stone-500">Mechanics</span>
+            <span className="text-amber-200 font-medium text-right max-w-[60%]">{mechLabels}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <button
+          onClick={onResume}
+          className="w-full px-6 py-3 rounded-xl bg-amber-700 hover:bg-amber-600 text-amber-100 font-bold transition-colors text-lg"
+        >
+          View Previous Results
+        </button>
+        <button
+          onClick={onNew}
+          className="w-full px-6 py-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-300 font-medium transition-colors"
+        >
+          Start New Search
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function formatTimeAgo(date) {
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (seconds < 60) return 'just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+  const days = Math.floor(hours / 24);
+  return `${days} day${days !== 1 ? 's' : ''} ago`;
 }
 
 // === Main Flowchart ===
 
 export default function SpiritFlowchart() {
+  const [savedResult] = useState(() => loadResult());
+  const [view, setView] = useState(() => {
+    // If there's a saved result, show welcome screen; otherwise start wizard
+    return loadResult() ? 'welcome' : 'wizard';
+  });
+
   const [step, setStep] = useState(0);
   const [complexity, setComplexity] = useState(null);
   const [playstyle, setPlaystyle] = useState(null);
@@ -504,7 +682,32 @@ export default function SpiritFlowchart() {
     setRankedPlaystyles([]);
     setSpeed(null);
     setMechanics([]);
+    setView('wizard');
   };
+
+  const resumeSaved = () => {
+    const saved = loadResult();
+    if (!saved) return;
+    setComplexity(saved.filters.complexity);
+    setPlaystyle(saved.filters.playstyle || null);
+    setSpeed(saved.filters.speed);
+    setMechanics(saved.filters.mechanics || []);
+    setUseRanking(saved.useRanking || false);
+    setRankedPlaystyles(saved.rankedPlaystyles || []);
+    setStep(4); // jump to results
+    setView('wizard');
+  };
+
+  // Welcome screen with previous results
+  if (view === 'welcome' && savedResult) {
+    return (
+      <WelcomeScreen
+        savedResult={savedResult}
+        onResume={resumeSaved}
+        onNew={restart}
+      />
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -534,7 +737,6 @@ export default function SpiritFlowchart() {
         />
       )}
 
-      {/* Navigation */}
       {step < 4 && (
         <div className="flex justify-between max-w-lg mx-auto mt-8">
           <button
