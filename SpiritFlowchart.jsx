@@ -12,19 +12,67 @@ import { SpiritDetail } from './components';
 
 // === LocalStorage helpers ===
 
-const STORAGE_KEY = 'spiritFlowchartLastResult';
+const STORAGE_KEY = 'spiritFlowchartHistory';
+const MAX_HISTORY = 3;
 
-function saveResult(data) {
+function loadHistory() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) { return []; }
+}
+
+function saveToHistory(entry) {
+  try {
+    const history = loadHistory();
+    // Deduplicate by preference code
+    const filtered = history.filter(h => h.code !== entry.code);
+    filtered.unshift(entry);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered.slice(0, MAX_HISTORY)));
   } catch (e) { /* ignore */ }
 }
 
-function loadResult() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch (e) { return null; }
+// === Preference Code ===
+
+function generateCode(complexity, playstyle, rankedPlaystyles, useRanking, speed, mechanics) {
+  const playstylePart = useRanking && rankedPlaystyles.length > 0
+    ? rankedPlaystyles.join('')
+    : (playstyle || '');
+  const mechPart = mechanics.length > 0 ? mechanics.join(',') : '';
+  return `${complexity}-${playstylePart}-${speed}-${mechPart}`;
+}
+
+function parseCode(code) {
+  const parts = code.trim().split('-');
+  if (parts.length !== 4) return null;
+
+  const [complexityPart, playstylePart, speedPart, mechPart] = parts;
+
+  // Validate complexity
+  if (!complexityOptions.find(c => c.code === complexityPart)) return null;
+
+  // Validate speed
+  if (!speedOptions.find(s => s.code === speedPart)) return null;
+
+  // Parse playstyle: single letter = simple, multiple = ranked
+  const validPlaystyleCodes = playstyleOptions.map(p => p.code);
+  const playstyleChars = playstylePart.split('');
+  if (playstyleChars.length === 0) return null;
+  if (!playstyleChars.every(c => validPlaystyleCodes.includes(c))) return null;
+
+  const useRanking = playstyleChars.length > 1;
+  const playstyle = useRanking ? null : playstyleChars[0];
+  const rankedPlaystyles = useRanking ? playstyleChars : [];
+
+  // Parse mechanics
+  const mechanics = mechPart ? mechPart.split(',').filter(m => mechanicOptions.find(o => o.code === m)) : [];
+  if (mechanics.length === 0) return null;
+
+  return {
+    filters: { complexity: complexityPart, playstyle, speed: speedPart, mechanics },
+    rankedPlaystyles,
+    useRanking
+  };
 }
 
 // === Find reference spirit by name ===
@@ -46,7 +94,7 @@ function scoreSpirits(filters, rankedPlaystyles) {
   return pool.map(spirit => {
     let score = 0;
 
-    if (rankedPlaystyles) {
+    if (rankedPlaystyles && rankedPlaystyles.length > 0) {
       rankedPlaystyles.forEach((code, idx) => {
         const weight = idx === 0 ? 5 : idx === 1 ? 3 : idx === 2 ? 1 : 0;
         if (spirit.playstyles.includes(code)) {
@@ -87,13 +135,18 @@ function categorizeTiers(scored) {
   return { best, runners, others };
 }
 
-function generateCode(complexity, rankedPlaystyles, speed, mechanics) {
-  const playstyleCode = rankedPlaystyles ? rankedPlaystyles.join('') : '';
-  const mechCode = mechanics.length > 0 ? mechanics.join(',') : '';
-  return `${complexity}-${playstyleCode}-${speed}-${mechCode}`;
+function formatTimeAgo(date) {
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (seconds < 60) return 'just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
 }
 
-// === Components ===
+// === UI Components ===
 
 function StepIndicator({ steps, current }) {
   return (
@@ -405,7 +458,6 @@ function SpiritResultCard({ spirit, size = "large", onClick }) {
   );
 }
 
-// Spirit detail overlay for flowchart results — wraps the reference SpiritDetail or shows a simple view
 function FlowchartSpiritDetail({ spirit, onClose }) {
   const refSpirit = findReferenceSpirit(spirit.name);
 
@@ -413,7 +465,6 @@ function FlowchartSpiritDetail({ spirit, onClose }) {
     return <SpiritDetail spirit={refSpirit} onClose={onClose} />;
   }
 
-  // Fallback for spirits not in reference data
   const playstyleLabels = spirit.playstyles.map(c => playstyleOptions.find(p => p.code === c)?.label).join(', ');
   const mechLabels = spirit.mechanics.map(c => mechanicOptions.find(m => m.code === c)?.label).join(', ');
   const speedLabel = speedOptions.find(s => s.code === spirit.speed)?.label;
@@ -452,6 +503,8 @@ function FlowchartSpiritDetail({ spirit, onClose }) {
   );
 }
 
+// === Results Step ===
+
 function ResultsStep({ filters, rankedPlaystyles, useRanking, onRestart }) {
   const scored = useMemo(() => {
     if (useRanking) {
@@ -462,34 +515,31 @@ function ResultsStep({ filters, rankedPlaystyles, useRanking, onRestart }) {
 
   const { best, runners, others } = useMemo(() => categorizeTiers(scored), [scored]);
 
-  const prefCode = useMemo(() => {
-    if (useRanking && rankedPlaystyles.length === 5) {
-      return generateCode(filters.complexity, rankedPlaystyles, filters.speed, filters.mechanics);
-    }
-    return null;
-  }, [filters, rankedPlaystyles, useRanking]);
+  const prefCode = useMemo(() =>
+    generateCode(filters.complexity, filters.playstyle, rankedPlaystyles, useRanking, filters.speed, filters.mechanics),
+    [filters, rankedPlaystyles, useRanking]
+  );
 
   const [copied, setCopied] = useState(false);
   const [showOthers, setShowOthers] = useState(false);
   const [detailSpirit, setDetailSpirit] = useState(null);
 
-  // Save results to localStorage whenever they compute
+  // Save to history on mount
   useEffect(() => {
-    saveResult({
+    saveToHistory({
+      code: prefCode,
       filters,
       rankedPlaystyles,
       useRanking,
       timestamp: Date.now()
     });
-  }, [filters, rankedPlaystyles, useRanking]);
+  }, [prefCode, filters, rankedPlaystyles, useRanking]);
 
   const copyCode = () => {
-    if (prefCode) {
-      navigator.clipboard.writeText(prefCode).then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      });
-    }
+    navigator.clipboard.writeText(prefCode).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
   };
 
   return (
@@ -498,20 +548,19 @@ function ResultsStep({ filters, rankedPlaystyles, useRanking, onRestart }) {
         Your Spirit Matches
       </h2>
 
-      {prefCode && (
-        <div className="max-w-lg mx-auto mb-8 p-4 rounded-xl bg-teal-900/30 border border-teal-700">
-          <div className="text-sm text-teal-400 mb-1">Your Preference Code</div>
-          <div className="flex items-center gap-3">
-            <code className="text-xl font-mono text-teal-200 flex-1">{prefCode}</code>
-            <button
-              onClick={copyCode}
-              className="px-3 py-1 rounded bg-teal-700 hover:bg-teal-600 text-teal-100 text-sm transition-colors"
-            >
-              {copied ? 'Copied!' : 'Copy'}
-            </button>
-          </div>
+      {/* Preference Code — always shown */}
+      <div className="max-w-lg mx-auto mb-8 p-4 rounded-xl bg-teal-900/30 border border-teal-700">
+        <div className="text-sm text-teal-400 mb-1">Your Preference Code</div>
+        <div className="flex items-center gap-3">
+          <code className="text-xl font-mono text-teal-200 flex-1 break-all">{prefCode}</code>
+          <button
+            onClick={copyCode}
+            className="px-3 py-1 rounded bg-teal-700 hover:bg-teal-600 text-teal-100 text-sm transition-colors shrink-0"
+          >
+            {copied ? 'Copied!' : 'Copy'}
+          </button>
         </div>
-      )}
+      </div>
 
       {best.length > 0 && (
         <div className="mb-8">
@@ -569,92 +618,124 @@ function ResultsStep({ filters, rankedPlaystyles, useRanking, onRestart }) {
   );
 }
 
-// === Welcome / Resume Screen ===
+// === Welcome / History Screen ===
 
-function WelcomeScreen({ savedResult, onResume, onNew }) {
-  const complexityLabel = complexityOptions.find(c => c.code === savedResult.filters.complexity)?.label || savedResult.filters.complexity;
-  const speedLabel = speedOptions.find(s => s.code === savedResult.filters.speed)?.label || savedResult.filters.speed;
-  const mechLabels = savedResult.filters.mechanics.map(c => mechanicOptions.find(m => m.code === c)?.label || c).join(', ');
-
-  let playstyleDesc;
-  if (savedResult.useRanking && savedResult.rankedPlaystyles.length > 0) {
-    const labels = savedResult.rankedPlaystyles.map(c => playstyleOptions.find(p => p.code === c)?.label || c);
-    playstyleDesc = labels.join(' > ');
-  } else if (savedResult.filters.playstyle) {
-    playstyleDesc = playstyleOptions.find(p => p.code === savedResult.filters.playstyle)?.label || savedResult.filters.playstyle;
+function describeEntry(entry) {
+  const cx = complexityOptions.find(c => c.code === entry.filters.complexity)?.label || entry.filters.complexity;
+  const sp = speedOptions.find(s => s.code === entry.filters.speed)?.label || entry.filters.speed;
+  let ps;
+  if (entry.useRanking && entry.rankedPlaystyles.length > 0) {
+    ps = entry.rankedPlaystyles.map(c => playstyleOptions.find(p => p.code === c)?.label || c).join(' > ');
+  } else if (entry.filters.playstyle) {
+    ps = playstyleOptions.find(p => p.code === entry.filters.playstyle)?.label || entry.filters.playstyle;
   } else {
-    playstyleDesc = 'None';
+    ps = '—';
   }
-
-  const date = new Date(savedResult.timestamp);
-  const timeAgo = formatTimeAgo(date);
-
-  return (
-    <div className="max-w-lg mx-auto px-4 py-12 text-center">
-      <h2 className="text-3xl font-bold text-amber-200 mb-3" style={{ fontFamily: 'Cinzel, serif' }}>
-        Find Your Spirit
-      </h2>
-      <p className="text-stone-400 mb-8">You have previous results from {timeAgo}.</p>
-
-      <div className="bg-stone-800/60 border border-stone-700 rounded-xl p-5 mb-8 text-left">
-        <h3 className="text-sm font-bold text-stone-400 uppercase tracking-wider mb-3">Previous Preferences</h3>
-        <div className="space-y-2 text-sm">
-          <div className="flex justify-between">
-            <span className="text-stone-500">Complexity</span>
-            <span className="text-amber-200 font-medium">{complexityLabel}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-stone-500">Playstyle</span>
-            <span className="text-amber-200 font-medium text-right max-w-[60%]">{playstyleDesc}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-stone-500">Speed</span>
-            <span className="text-amber-200 font-medium">{speedLabel}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-stone-500">Mechanics</span>
-            <span className="text-amber-200 font-medium text-right max-w-[60%]">{mechLabels}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <button
-          onClick={onResume}
-          className="w-full px-6 py-3 rounded-xl bg-amber-700 hover:bg-amber-600 text-amber-100 font-bold transition-colors text-lg"
-        >
-          View Previous Results
-        </button>
-        <button
-          onClick={onNew}
-          className="w-full px-6 py-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-300 font-medium transition-colors"
-        >
-          Start New Search
-        </button>
-      </div>
-    </div>
-  );
+  const mechs = entry.filters.mechanics.map(c => mechanicOptions.find(m => m.code === c)?.label || c).join(', ');
+  return { cx, sp, ps, mechs };
 }
 
-function formatTimeAgo(date) {
-  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-  if (seconds < 60) return 'just now';
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
-  const days = Math.floor(hours / 24);
-  return `${days} day${days !== 1 ? 's' : ''} ago`;
+function WelcomeScreen({ history, onLoadEntry, onNew, onLoadCode }) {
+  const [codeInput, setCodeInput] = useState('');
+  const [codeError, setCodeError] = useState('');
+
+  const handleCodeSubmit = () => {
+    const parsed = parseCode(codeInput);
+    if (!parsed) {
+      setCodeError('Invalid preference code. Format: B-G-F-DD,FG,IN');
+      return;
+    }
+    setCodeError('');
+    onLoadCode(parsed);
+  };
+
+  return (
+    <div className="max-w-xl mx-auto px-4 py-12">
+      <h2 className="text-3xl font-bold text-amber-200 mb-8 text-center" style={{ fontFamily: 'Cinzel, serif' }}>
+        Find Your Spirit
+      </h2>
+
+      {/* Start New — on top */}
+      <button
+        onClick={onNew}
+        className="w-full px-6 py-3 rounded-xl bg-amber-700 hover:bg-amber-600 text-amber-100 font-bold transition-colors text-lg mb-8"
+      >
+        Start New Search
+      </button>
+
+      {/* Code input */}
+      <div className="bg-stone-800/60 border border-stone-700 rounded-xl p-5 mb-8">
+        <h3 className="text-sm font-bold text-stone-400 uppercase tracking-wider mb-3">Load from Preference Code</h3>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={codeInput}
+            onChange={(e) => { setCodeInput(e.target.value); setCodeError(''); }}
+            onKeyDown={(e) => e.key === 'Enter' && handleCodeSubmit()}
+            placeholder="e.g. I-GCDSF-F-DD,FG,IN"
+            className="flex-1 bg-stone-900 border border-stone-600 rounded-lg px-3 py-2 text-teal-200 font-mono text-sm placeholder-stone-600 focus:outline-none focus:border-teal-500"
+          />
+          <button
+            onClick={handleCodeSubmit}
+            className="px-4 py-2 rounded-lg bg-teal-700 hover:bg-teal-600 text-teal-100 font-medium text-sm transition-colors shrink-0"
+          >
+            Load
+          </button>
+        </div>
+        {codeError && <p className="text-red-400 text-xs mt-2">{codeError}</p>}
+      </div>
+
+      {/* Previous results */}
+      {history.length > 0 && (
+        <div>
+          <h3 className="text-sm font-bold text-stone-400 uppercase tracking-wider mb-4">Recent Results</h3>
+          <div className="space-y-3">
+            {history.map((entry, idx) => {
+              const { cx, sp, ps, mechs } = describeEntry(entry);
+              const timeAgo = formatTimeAgo(new Date(entry.timestamp));
+              return (
+                <button
+                  key={idx}
+                  onClick={() => onLoadEntry(entry)}
+                  className="w-full text-left bg-stone-800/60 border border-stone-700 rounded-xl p-4 hover:border-amber-500 transition-all"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <code className="text-sm font-mono text-teal-300">{entry.code}</code>
+                    <span className="text-stone-500 text-xs ml-2 shrink-0">{timeAgo}</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                    <div>
+                      <span className="text-stone-500">Complexity: </span>
+                      <span className="text-stone-300">{cx}</span>
+                    </div>
+                    <div>
+                      <span className="text-stone-500">Speed: </span>
+                      <span className="text-stone-300">{sp}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-stone-500">Playstyle: </span>
+                      <span className="text-stone-300">{ps}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-stone-500">Mechanics: </span>
+                      <span className="text-stone-300">{mechs}</span>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 // === Main Flowchart ===
 
 export default function SpiritFlowchart() {
-  const [savedResult] = useState(() => loadResult());
-  const [view, setView] = useState(() => {
-    // If there's a saved result, show welcome screen; otherwise start wizard
-    return loadResult() ? 'welcome' : 'wizard';
-  });
+  const [history] = useState(() => loadHistory());
+  const [view, setView] = useState(() => history.length > 0 ? 'welcome' : 'wizard');
 
   const [step, setStep] = useState(0);
   const [complexity, setComplexity] = useState(null);
@@ -685,26 +766,35 @@ export default function SpiritFlowchart() {
     setView('wizard');
   };
 
-  const resumeSaved = () => {
-    const saved = loadResult();
-    if (!saved) return;
-    setComplexity(saved.filters.complexity);
-    setPlaystyle(saved.filters.playstyle || null);
-    setSpeed(saved.filters.speed);
-    setMechanics(saved.filters.mechanics || []);
-    setUseRanking(saved.useRanking || false);
-    setRankedPlaystyles(saved.rankedPlaystyles || []);
-    setStep(4); // jump to results
+  const loadEntry = (entry) => {
+    setComplexity(entry.filters.complexity);
+    setPlaystyle(entry.filters.playstyle || null);
+    setSpeed(entry.filters.speed);
+    setMechanics(entry.filters.mechanics || []);
+    setUseRanking(entry.useRanking || false);
+    setRankedPlaystyles(entry.rankedPlaystyles || []);
+    setStep(4);
     setView('wizard');
   };
 
-  // Welcome screen with previous results
-  if (view === 'welcome' && savedResult) {
+  const loadFromCode = (parsed) => {
+    setComplexity(parsed.filters.complexity);
+    setPlaystyle(parsed.filters.playstyle || null);
+    setSpeed(parsed.filters.speed);
+    setMechanics(parsed.filters.mechanics || []);
+    setUseRanking(parsed.useRanking || false);
+    setRankedPlaystyles(parsed.rankedPlaystyles || []);
+    setStep(4);
+    setView('wizard');
+  };
+
+  if (view === 'welcome') {
     return (
       <WelcomeScreen
-        savedResult={savedResult}
-        onResume={resumeSaved}
+        history={history}
+        onLoadEntry={loadEntry}
         onNew={restart}
+        onLoadCode={loadFromCode}
       />
     );
   }
