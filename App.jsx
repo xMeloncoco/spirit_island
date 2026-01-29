@@ -7,6 +7,7 @@ import {
   Footer,
   TokenBadge
 } from './components';
+import SpiritFlowchart from './SpiritFlowchart';
 
 const allTokens = [
   "Beasts", "Wilds", "Disease", "Strife", "Badlands",
@@ -18,6 +19,7 @@ const allComplexities = ["Low", "Moderate", "High", "Very High"];
 const allElements = ["Sun", "Moon", "Fire", "Air", "Water", "Earth", "Plant", "Animal"];
 
 export default function App() {
+  const [mode, setMode] = useState('flowchart'); // 'reference' or 'flowchart'
   const [selectedSpirit, setSelectedSpirit] = useState(null);
   const [tokenFilter, setTokenFilter] = useState('all');
   const [complexityFilter, setComplexityFilter] = useState('all');
@@ -47,11 +49,30 @@ export default function App() {
       <header className="sticky top-0 z-40 bg-gradient-to-r from-amber-900 via-orange-900 to-amber-900 border-b-2 border-amber-600 shadow-xl">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <h1 className="text-4xl font-black text-amber-100 text-center mb-4" style={{ fontFamily: 'Cinzel, serif' }}>
-            🌊 Spirit Island Reference 🌊
+            Spirit Island
           </h1>
-          <p className="text-center text-amber-200 mb-6">Browse all spirits from every expansion</p>
 
-          <div className="space-y-3">
+          {/* Mode Toggle */}
+          <div className="flex justify-center gap-2 mb-6">
+            <button
+              onClick={() => setMode('flowchart')}
+              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+                mode === 'flowchart' ? 'bg-amber-600 text-amber-100' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'
+              }`}
+            >
+              Find Your Spirit
+            </button>
+            <button
+              onClick={() => setMode('reference')}
+              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+                mode === 'reference' ? 'bg-amber-600 text-amber-100' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'
+              }`}
+            >
+              Spirit Reference
+            </button>
+          </div>
+
+          {mode === 'reference' && <div className="space-y-3">
             {/* Complexity Filter */}
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-amber-400 mr-2">Complexity:</span>
@@ -137,11 +158,13 @@ export default function App() {
                 </button>
               ))}
             </div>
-          </div>
+          </div>}
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      {mode === 'flowchart' && <SpiritFlowchart />}
+
+      {mode === 'reference' && <main className="max-w-7xl mx-auto px-4 py-8">
         {Object.entries(spiritData)
           .filter(([expansion]) => expansionFilter === 'all' || expansionFilter === expansion)
           .map(([expansion, spirits]) => {
@@ -149,11 +172,11 @@ export default function App() {
             if (filtered.length === 0) return null;
             return <ExpansionSection key={expansion} name={expansion} spirits={filtered} onSpiritClick={setSelectedSpirit} />;
           })}
-      </main>
+      </main>}
 
-      <div className="max-w-7xl mx-auto px-4 pb-8">
+      {mode === 'reference' && <div className="max-w-7xl mx-auto px-4 pb-8">
         <TokenLegend />
-      </div>
+      </div>}
 
       <Footer />
 
